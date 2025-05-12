@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Edit Post</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.title.label(class="form-label") }}
+            {{ form.title(class="form-control", value=post.title) }}
+            {% if form.title.errors %}
+                {% for error in form.title.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.content.label(class="form-label") }}
+            {{ form.content(class="form-control") }}
+            {% if form.content.errors %}
+                {% for error in form.content.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.image.label(class="form-label") }}
+            {{ form.image(class="form-control") }}
+            {% if post.image %}
+                <p class="current-image">Current image: <img src="{{ url_for('static', filename='uploads/' + post.image) }}" alt="Post image" style="max-width: 200px;"></p>
+            {% endif %}
+            {% if form.image.errors %}
+                {% for error in form.image.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="buttons-container">
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('blog.view_post', post_id=post.id) }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
