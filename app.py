@@ -13,6 +13,7 @@ app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['SESSION_PERMANENT'] = True
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+app.config['MAX_FILE_SIZE'] = 5 * 1024 * 1024  # 5 MB
 
 db.init_app(app)  # Привязываем db к приложению
 

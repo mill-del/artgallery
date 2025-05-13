@@ -31,6 +31,15 @@
                 {% endfor %}
             {% endif %}
         </div>
+        <div class="mb-3">
+            {{ form.tags.label(class="form-label") }}
+            {{ form.tags(class="form-control") }}
+            {% if form.tags.errors %}
+                {% for error in form.tags.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
         <div class="buttons-container">
             {{ form.submit(class="btn btn-primary") }}
             <a href="{{ url_for('blog.home') }}" class="btn btn-secondary">Cancel</a>

@@ -4,6 +4,27 @@
     <div class="hero-section">
         <h1>Art Gallery</h1>
     </div>
+    <div class="search-section mb-4">
+        <h3>Filter Paintings</h3>
+        <form method="GET" action="{{ url_for('blog.home') }}">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="query" class="form-label">Search by title, content, or author</label>
+                    <input type="text" name="query" id="query" class="form-control" value="{{ request.args.get('query', '') }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="tag" class="form-label">Filter by tag</label>
+                    <select name="tag" id="tag" class="form-control">
+                        <option value="">All tags</option>
+                        {% for tag in tags %}
+                            <option value="{{ tag.name }}" {% if request.args.get('tag') == tag.name %}selected{% endif %}>{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+    </div>
     <div class="posts-section">
         <div class="row">
             {% for post in posts %}
@@ -16,6 +37,9 @@
                             <h5 class="card-title">{{ post.title }}</h5>
                             <p class="card-text">{{ post.content | truncate(100) }}</p>
                             <p class="card-text"><small class="text-muted">Posted by {{ post.author.username }} on {{ post.date_posted.strftime('%Y-%m-%d') }}</small></p>
+                            {% if post.tags %}
+                                <p class="card-text"><small class="text-muted">Tags: {{ post.tags | map(attribute='name') | join(', ') }}</small></p>
+                            {% endif %}
                             <a href="{{ url_for('blog.view_post', post_id=post.id) }}" class="btn btn-primary">Read More</a>
                             {% if session['user_id'] == post.user_id %}
                                 <a href="{{ url_for('blog.edit_post', post_id=post.id) }}" class="btn btn-primary">Edit</a>
@@ -57,7 +81,7 @@
         document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
             if (currentPostId) {
                 fetch('{{ url_for("blog.delete_post", post_id=0) }}'.replace('0', currentPostId), {
-                    method: 'POST',
+                    method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -69,7 +93,6 @@
                         if (postContainer) {
                             postContainer.remove();
                         }
-                        // Закрыть модалку
                         const modal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
                         modal.hide();
                         currentPostId = null;

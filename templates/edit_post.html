@@ -3,7 +3,7 @@
 {% block content %}
 <div class="form-container">
     <h2>Edit Post</h2>
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" id="editPostForm">
         {{ form.hidden_tag() }}
         <div class="mb-3">
             {{ form.title.label(class="form-label") }}
@@ -35,10 +35,40 @@
                 {% endfor %}
             {% endif %}
         </div>
+        <div class="mb-3">
+            {{ form.tags.label(class="form-label") }}
+            {{ form.tags(class="form-control") }}
+            {% if form.tags.errors %}
+                {% for error in form.tags.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
         <div class="buttons-container">
             {{ form.submit(class="btn btn-primary") }}
             <a href="{{ url_for('blog.view_post', post_id=post.id) }}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
 </div>
+<script>
+    document.getElementById('editPostForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        fetch('{{ url_for("blog.edit_post", post_id=post.id) }}', {
+            method: 'PUT',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '{{ url_for("blog.view_post", post_id=post.id) }}';
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
 {% endblock %}

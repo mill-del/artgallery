@@ -8,6 +8,9 @@
         <img src="{{ url_for('static', filename='uploads/' + post.image) }}" alt="Post image">
     {% endif %}
     <p><small class="text-muted">Posted by {{ post.author.username }} on {{ post.date_posted.strftime('%Y-%m-%d') }}</small></p>
+    {% if post.tags %}
+        <p><small class="text-muted">Tags: {{ post.tags | map(attribute='name') | join(', ') }}</small></p>
+    {% endif %}
     {% if session['user_id'] == post.user_id %}
         <a href="{{ url_for('blog.edit_post', post_id=post.id) }}" class="btn btn-primary">Edit</a>
         <button class="btn btn-danger delete-post-btn" data-post-id="{{ post.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeletePostId({{ post.id }})">Delete</button>
@@ -44,7 +47,7 @@
     document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
         if (currentPostId) {
             fetch('{{ url_for("blog.delete_post", post_id=0) }}'.replace('0', currentPostId), {
-                method: 'POST',
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -52,7 +55,6 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Закрыть модалку и перенаправить на главную
                     const modal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
                     modal.hide();
                     window.location.href = '{{ url_for("blog.home") }}';
