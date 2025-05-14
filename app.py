@@ -1,4 +1,3 @@
-# app.py
 import os
 from flask import Flask
 from datetime import timedelta
@@ -6,14 +5,14 @@ from database import db  # Импортируем db из database.py
 from blog import blog  # Импортируем blog после определения db
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key'
+app.config['SECRET_KEY'] = 'malika&zhaniya'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:malika@localhost:5432/artgallery'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['SESSION_PERMANENT'] = True
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
-app.config['MAX_FILE_SIZE'] = 5 * 1024 * 1024  # 5 MB
+app.config['MAX_FILE_SIZE'] =  1024 * 1024
 
 db.init_app(app)  # Привязываем db к приложению
 

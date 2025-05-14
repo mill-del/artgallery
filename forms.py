@@ -20,5 +20,4 @@ class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
     image = FileField('Image')
-    tags = StringField('Tags (comma-separated)', validators=[Length(max=200)])
     submit = SubmitField('Post')
